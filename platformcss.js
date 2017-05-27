@@ -7,6 +7,10 @@
  * Any questions please feel free to email me or put a issue up on the github repo
  * Version 3.0.0                                      Nathan@master-technology.com
  *********************************************************************************/
+/**********************************************************************************
+ * Modified for internal use to add behavior based on H/W ratio 
+ * RedLeafSoft
+ *********************************************************************************/
 "use strict";
 
 /* jshint camelcase: false */
@@ -20,21 +24,21 @@ require('nativescript-platform');
  * Function that adds the proper class when we navigate to a new page
  * @param args
  */
-let deviceInfo, sizeGroupings = false;
+let className = '';
 let groupings = [1280,1024,800,600,540,480,400,360,320];
 
 const setDevice = function(args) {
     const currentPage = args.object;
 
     let device;
-    if (!deviceInfo) {
+    if (!className) {
         switch (nsPlatform.platform) {
             case nsPlatform.type.IOS:
-                device = 'ios ios';
+                device = 'ios';
                 break;
 
             case nsPlatform.type.ANDROID:
-                device = 'android android';
+                device = 'android';
                 break;
 
             case nsPlatform.type.WINDOWS:
@@ -44,38 +48,27 @@ const setDevice = function(args) {
 
 		const screen = nsPlatform.screen();
 
-		if (sizeGroupings) {
-			let size = (screen.width < screen.height ? screen.width : screen.height);
-			let found = false;
-			for (let i=0;i<groupings.length;i++) {
-				if (size >= groupings[i]) {
-					device += groupings[i];
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				device += size;
-			}
+		let short, long, shape;
+		if (screen.width < screen.height) {
+			[short, long] = [screen.width, screen.height];
 		} else {
-			if (screen.width < screen.height) {
-				device += screen.width;
-			} else {
-				device += screen.height;
-			}
+			[long, short] = [screen.width, screen.height];
+		}
+		if (long/short < 1.7) {
+			shape = 'Short'
+		} else {
+			shape = 'Normal'
 		}
 
-		deviceInfo = device;
-    } else {
-        device = deviceInfo;
+		className = device + ' '+ 'minH'+ screen.height + ' '+ 'minW'+ screen.width+ ' '+ 'shape'+ shape;
     }
 
     if (currentPage) {
         const data = currentPage.className || '';
-        if (data.length) {
-            currentPage.className = data + ' ' + device;
+        if (data) {
+            currentPage.className = data + ' ' + className;
         } else {
-            currentPage.className = device;
+            currentPage.className = className;
         }
     }
 };
@@ -83,28 +76,3 @@ const setDevice = function(args) {
 // Setup Events
 Page.on(Page.navigatingToEvent, setDevice);
 
-exports.sizeGroupings = function(val) {
-	if (Array.isArray(val)) {
-		if (val.length === 0) {
-			sizeGroupings = false;
-		} else {
-			groupings = val.splice(0);
-			groupings.sort(function (x, y) {
-				if (x < y) {
-					return 1;
-				}
-				else if (x > y) {
-					return -1;
-				}
-				return 0;
-			});
-			sizeGroupings = true;
-		}
-	} else {
-		if (sizeGroupings === !!val) {
-			return;
-		}
-		sizeGroupings = !!val;
-	}
-	deviceInfo = null;
-};
