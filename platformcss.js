@@ -18,42 +18,34 @@
 
 const Page = require('ui/page').Page;
 require('nativescript-globalevents');
-require('nativescript-platform');
+const platformModule = require('platform'),
+    device = platformModule.device,
+    screen = platformModule.screen.mainScreen;
 
 /**
  * Function that adds the proper class when we navigate to a new page
  * @param args
  */
 let className = '';
-let groupings = [1280,1024,800,600,540,480,400,360,320];
+// let groupings = [1280,1024,800,600,540,480,400,360,320];
 
 const setDevice = function(args) {
     const currentPage = args.object;
 
-    let device;
     if (!className) {
-        switch (nsPlatform.platform) {
-            case nsPlatform.type.IOS:
-                device = 'ios';
-                break;
+		let short, long, shape, size ,os;
 
-            case nsPlatform.type.ANDROID:
-                let apiLevel = parseInt(nsPlatform.device.sdkVersion);
-                device = apiLevel >= 21 ? 'android material' : 'android pre-material';
-                break;
-
-            case nsPlatform.type.WINDOWS:
-                device = 'windows';
-                break;
+        if (platformModule.isAndroid) {
+                let apiLevel = parseInt(device.sdkVersion);
+                os = apiLevel >= 21 ? 'android material' : 'android pre-material'
+        } else if (platformModule.isIos) {
+                os = 'ios'
         }
 
-		const screen = nsPlatform.screen();
-
-		let short, long, shape, size;
-		if (screen.width < screen.height) {
-			[short, long] = [screen.width, screen.height];
+		if (screen.widthDIPs < screen.heightDIPs) {
+			[short, long] = [screen.widthDIPs, screen.heightDIPs];
 		} else {
-			[long, short] = [screen.width, screen.height];
+			[long, short] = [screen.widthDIPs, screen.heightDIPs];
 		}
 
 		if (long/short < 1.65) {
@@ -75,7 +67,7 @@ const setDevice = function(args) {
         let roundedHeight = Math.floor(long/40)*40,
             roundedWidth = Math.floor(short/40)*40;
 
-		className = device + ' '+ 'minH'+ roundedHeight + ' '+ 'minW'+ roundedWidth+ ' '+ 'shape'+ shape+ ' '+ 'size'+ size;
+		className = os + ' '+ 'minH'+ roundedHeight + ' '+ 'minW'+ roundedWidth+ ' '+ 'shape'+ shape+ ' '+ 'size'+ size;
     }
 
     if (currentPage) {

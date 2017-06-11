@@ -14,8 +14,7 @@
     "url": "https://github.com/nathanaela/nativescript-platform-css.git"
   },
   "dependencies": {
-    "nativescript-globalevents": "^1.1.0",
-    "nativescript-platform": "^1.1.0"
+    "nativescript-globalevents": "^1.1.0"
   },
   "keywords": [
     "NativeScript", "platform", "css", "ios", "android"
