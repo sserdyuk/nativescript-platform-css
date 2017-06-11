@@ -48,19 +48,33 @@ const setDevice = function(args) {
 
 		const screen = nsPlatform.screen();
 
-		let short, long, shape;
+		let short, long, shape, size;
 		if (screen.width < screen.height) {
 			[short, long] = [screen.width, screen.height];
 		} else {
 			[long, short] = [screen.width, screen.height];
 		}
-		if (long/short < 1.7) {
+
+		if (long/short < 1.65) {
 			shape = 'Short'
+		} else if (long/short > 1.75) {
+			shape = 'Tall'
 		} else {
 			shape = 'Normal'
 		}
 
-		className = device + ' '+ 'minH'+ screen.height + ' '+ 'minW'+ screen.width+ ' '+ 'shape'+ shape;
+		if (short <= 320) {
+			size = 'Small'
+		} else if (short <= 380) {
+			shape = 'Medium'
+		} else {
+			shape = 'Large'
+		}
+
+        let roundedHeight = Math.floor(long/40)*40,
+            roundedWidth = Math.floor(short/40)*40;
+
+		className = device + ' '+ 'minH'+ roundedHeight + ' '+ 'minW'+ roundedWidth+ ' '+ 'shape'+ shape+ ' '+ 'size'+ size;
     }
 
     if (currentPage) {
