@@ -66,9 +66,9 @@ const setDevice = function(args) {
 		if (short <= 320) {
 			size = 'Small'
 		} else if (short <= 380) {
-			shape = 'Medium'
+			size = 'Medium'
 		} else {
-			shape = 'Large'
+			size = 'Large'
 		}
 
         let roundedHeight = Math.floor(long/40)*40,
