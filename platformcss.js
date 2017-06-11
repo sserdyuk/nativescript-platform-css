@@ -38,7 +38,8 @@ const setDevice = function(args) {
                 break;
 
             case nsPlatform.type.ANDROID:
-                device = 'android';
+                let apiLevel = parseInt(nsPlatform.device.sdkVersion);
+                device = apiLevel >= 21 ? 'android material' : 'android pre-material';
                 break;
 
             case nsPlatform.type.WINDOWS:
