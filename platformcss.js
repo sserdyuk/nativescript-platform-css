@@ -33,12 +33,12 @@ const setDevice = function(args) {
     const currentPage = args.object;
 
     if (!className) {
-		let short, long, shape, size ,os;
+		let short, long, shape, size, os;
 
         if (platformModule.isAndroid) {
                 let apiLevel = parseInt(device.sdkVersion);
                 os = apiLevel >= 21 ? 'android material' : 'android pre-material'
-        } else if (platformModule.isIos) {
+        } else if (platformModule.isIOS) {
                 os = 'ios'
         }
 
