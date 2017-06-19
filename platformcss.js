@@ -83,3 +83,5 @@ const setDevice = function(args) {
 // Setup Events
 Page.on(Page.navigatingToEvent, setDevice);
 
+exports.className = function() { return className }
+
