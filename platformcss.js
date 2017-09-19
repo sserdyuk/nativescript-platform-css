@@ -26,26 +26,28 @@ const platformModule = require('platform'),
  * Function that adds the proper class when we navigate to a new page
  * @param args
  */
-let className = '';
-// let groupings = [1280,1024,800,600,540,480,400,360,320];
+var thisClassName = '';
+// var groupings = [1280,1024,800,600,540,480,400,360,320];
 
 const setDevice = function(args) {
     const currentPage = args.object;
 
-    if (!className) {
-		let short, long, shape, size, os;
+    if (!thisClassName) {
+		var short, long, shape, size, os;
 
         if (platformModule.isAndroid) {
-                let apiLevel = parseInt(device.sdkVersion);
+                var apiLevel = parseInt(device.sdkVersion);
                 os = apiLevel >= 21 ? 'android material' : 'android pre-material'
         } else if (platformModule.isIOS) {
                 os = 'ios'
         }
 
 		if (screen.widthDIPs < screen.heightDIPs) {
-			[short, long] = [screen.widthDIPs, screen.heightDIPs];
+			short = screen.widthDIPs;
+			long = screen.heightDIPs;
 		} else {
-			[long, short] = [screen.widthDIPs, screen.heightDIPs];
+			long = screen.widthDIPs;
+			short = screen.heightDIPs;
 		}
 
 		if (long/short < 1.65) {
@@ -64,18 +66,18 @@ const setDevice = function(args) {
 			size = 'Large'
 		}
 
-        let roundedHeight = Math.floor(long/40)*40,
+        var roundedHeight = Math.floor(long/40)*40,
             roundedWidth = Math.floor(short/40)*40;
 
-		className = os + ' '+ 'minH'+ roundedHeight + ' '+ 'minW'+ roundedWidth+ ' '+ 'shape'+ shape+ ' '+ 'size'+ size;
+            thisClassName = os + ' '+ 'minH'+ roundedHeight + ' '+ 'minW'+ roundedWidth+ ' '+ 'shape'+ shape+ ' '+ 'size'+ size;
     }
 
     if (currentPage) {
         const data = currentPage.className || '';
         if (data) {
-            currentPage.className = data + ' ' + className;
+            currentPage.className = data + ' ' + thisClassName;
         } else {
-            currentPage.className = className;
+            currentPage.className = thisClassName;
         }
     }
 };
@@ -83,5 +85,5 @@ const setDevice = function(args) {
 // Setup Events
 Page.on(Page.navigatingToEvent, setDevice);
 
-exports.className = function() { return className }
+exports.className = function() { return thisClassName }
 
