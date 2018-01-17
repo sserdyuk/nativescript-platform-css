@@ -39,7 +39,16 @@ const setDevice = function(args) {
                 var apiLevel = parseInt(device.sdkVersion);
                 os = apiLevel >= 21 ? 'android material' : 'android pre-material'
         } else if (platformModule.isIOS) {
-                os = 'ios'
+            // See: https://github.com/NativeScript/ios-runtime/issues/698
+            const _SYS_NAMELEN = 256;
+            const buffer = interop.alloc(5 * _SYS_NAMELEN);
+            uname(buffer);
+            let name = NSString.stringWithUTF8String(buffer.add(_SYS_NAMELEN * 4)).toString();
+            // Get machine name for Simulator
+            if (name === 'x86_64' || name === 'i386') {
+                name = NSProcessInfo.processInfo.environment.objectForKey('SIMULATOR_MODEL_IDENTIFIER');
+            }
+            os = name.indexOf('iPhone10') === 0 ? 'ios iphoneX' : 'ios';
         }
 
 		if (screen.widthDIPs < screen.heightDIPs) {
