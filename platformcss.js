@@ -43,7 +43,7 @@ const setDevice = function(args) {
             const _SYS_NAMELEN = 256;
             const buffer = interop.alloc(5 * _SYS_NAMELEN);
             uname(buffer);
-            let name = NSString.stringWithUTF8String(buffer.add(_SYS_NAMELEN * 4)).toString();
+            var name = NSString.stringWithUTF8String(buffer.add(_SYS_NAMELEN * 4)).toString();
             // Get machine name for Simulator
             if (name === 'x86_64' || name === 'i386') {
                 name = NSProcessInfo.processInfo.environment.objectForKey('SIMULATOR_MODEL_IDENTIFIER');
