@@ -84,7 +84,7 @@ const setDevice = function(args) {
     if (currentPage) {
         const data = currentPage.className || '';
         if (data) {
-            currentPage.className = data + ' ' + thisClassName;
+            if (data.indexOf(thisClassName) == -1) currentPage.className = data + ' ' + thisClassName;
         } else {
             currentPage.className = thisClassName;
         }
